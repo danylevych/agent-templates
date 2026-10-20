@@ -1,0 +1,32 @@
+id: newsletter-drafter
+name: Newsletter Drafter
+category: marketing
+icon: email
+description: >-
+  Turns this week's product updates from Google Docs into a newsletter draft in your house
+  style, saved as a Google Doc and a Gmail draft for your review.
+useCases:
+  - Collect the week's release notes and announcements
+  - Write a newsletter draft in your house style
+  - Save it as a Google Doc and a Gmail draft for review
+status: published
+
+model:
+  recommended: claude-sonnet-5
+
+apps:
+  - key: google-docs
+    tools:
+      - list_documents
+      - get_document
+      - create_document
+      - insert_text
+      - format_text
+  - key: gmail
+    tools:
+      - get_current_email_address
+      - create_draft
+      - list_drafts
+
+skills:
+  - internal-comms

@@ -1,0 +1,36 @@
+id: sales-pipeline
+name: Sales Pipeline Analyst
+category: sales
+icon: table
+description: >-
+  Pulls deals from HubSpot, flags the ones that have stalled and builds a weekly pipeline
+  summary as a Google Sheet or a short deck.
+useCases:
+  - Summarize new and moved deals this week
+  - Flag deals with no activity in two weeks
+  - Write the pipeline to a Google Sheet
+  - Build a short pipeline deck for the sales meeting
+status: published
+
+model:
+  recommended: claude-sonnet-5
+
+apps:
+  - key: hubspot
+    tools:
+      - search_crm_objects
+      - get_crm_objects
+      - query_crm_data
+      - search_owners
+      - search_properties
+      - get_properties
+  - key: google-sheets
+    tools:
+      - create_spreadsheet
+      - read_spreadsheet
+      - append_row
+      - update_cells
+
+skills:
+  - spreadsheet
+  - slides

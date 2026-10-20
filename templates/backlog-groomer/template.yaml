@@ -1,0 +1,33 @@
+id: backlog-groomer
+name: Backlog Groomer
+category: engineering
+icon: table
+description: >-
+  Keeps the Jira backlog tidy: finds issues with missing details, suggests priorities
+  and links duplicates, after you confirm each change.
+useCases:
+  - Find backlog issues with no description or acceptance criteria
+  - Suggest a priority from impact, age and links
+  - Find likely duplicates and link them
+  - Move groomed issues to Ready, after you confirm
+status: published
+
+model:
+  recommended: claude-sonnet-5
+
+apps:
+  - key: atlassian
+    tools:
+      - getAccessibleAtlassianResources
+      - searchJiraIssuesUsingJql
+      - getJiraIssue
+      - listJiraIssueComments
+      - editJiraIssue
+      - addOrEditJiraIssueComment
+      - listJiraIssueLinkTypes
+      - createJiraIssueLink
+      - listJiraIssueTransitions
+      - transitionJiraIssue
+
+skills:
+  - spreadsheet

@@ -1,0 +1,37 @@
+id: incident-investigator
+name: Incident Investigator
+category: engineering
+icon: search
+description: >-
+  Pulls Datadog monitors, logs, metrics and traces around an incident into one timeline,
+  and drafts the follow-up Jira issue and postmortem.
+useCases:
+  - Build a timeline of an incident from monitors, logs and metrics
+  - Find which service and deploy the errors started from
+  - Draft a postmortem document
+  - Open a follow-up Jira issue, after you confirm
+status: published
+
+model:
+  recommended: claude-sonnet-5
+
+apps:
+  - key: datadog
+    tools:
+      - list_incidents
+      - get_incident
+      - get_monitors
+      - get_logs
+      - query_metrics
+      - list_traces
+      - get_all_services
+      - list_dashboards
+      - get_dashboard
+  - key: atlassian
+    tools:
+      - getAccessibleAtlassianResources
+      - searchJiraIssuesUsingJql
+      - createJiraIssue
+
+skills:
+  - doc

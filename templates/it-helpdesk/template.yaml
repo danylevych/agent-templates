@@ -1,0 +1,29 @@
+id: it-helpdesk
+name: IT Help Desk
+category: security
+icon: globe
+description: >-
+  Answers common IT questions from your Confluence knowledge base and opens a Jira ticket
+  with the details filled in when it cannot solve something itself.
+useCases:
+  - Answer password, VPN and laptop questions from the knowledge base
+  - Open a ticket with the details already filled in
+  - Tell people where their existing ticket stands
+status: published
+
+model:
+  recommended: claude-sonnet-5
+
+apps:
+  - key: atlassian
+    tools:
+      - getAccessibleAtlassianResources
+      - searchConfluence
+      - getConfluenceContent
+      - searchJiraIssuesUsingJql
+      - getJiraIssue
+      - createJiraIssue
+      - addOrEditJiraIssueComment
+
+skills:
+  - internal-comms

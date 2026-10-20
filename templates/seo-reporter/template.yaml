@@ -1,0 +1,35 @@
+id: seo-reporter
+name: SEO Performance Reporter
+category: marketing
+icon: search
+description: >-
+  Reports on search and site performance from Search Console and Google Analytics: what grew,
+  what dropped and which pages need attention.
+useCases:
+  - Compare clicks, impressions and position with the previous period
+  - Find pages and queries that dropped
+  - Check indexing issues
+  - Build a monthly report as a spreadsheet or a short deck
+status: published
+
+model:
+  recommended: claude-sonnet-5
+
+apps:
+  - key: google-search-console
+    tools:
+      - gsc_list_properties
+      - gsc_get_performance_overview
+      - gsc_get_search_analytics
+      - gsc_compare_periods
+      - gsc_get_page_queries
+      - gsc_check_indexing_issues
+  - key: google-analytics
+    tools:
+      - ga_get_account_summaries
+      - ga_get_property_details
+      - ga_run_report
+
+skills:
+  - spreadsheet
+  - slides

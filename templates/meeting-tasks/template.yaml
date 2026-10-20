@@ -1,0 +1,33 @@
+id: meeting-tasks
+name: Meeting Notes to Tasks
+category: ops
+icon: calendar
+description: >-
+  Reads your meetings and their notes in Google Docs, pulls out the action items with owners
+  and due dates, and creates Jira issues after you confirm.
+useCases:
+  - Find yesterday's meetings and the notes linked to them
+  - List action items with owners and due dates
+  - Create a Jira issue for each one, after you confirm
+status: published
+
+model:
+  recommended: claude-sonnet-5
+
+apps:
+  - key: google-calendar
+    tools:
+      - list_calendars
+      - list_events
+      - get_event
+  - key: google-docs
+    tools:
+      - list_documents
+      - get_document
+  - key: atlassian
+    tools:
+      - getAccessibleAtlassianResources
+      - listJiraIssueAssignableUsers
+      - createJiraIssue
+
+skills: []
