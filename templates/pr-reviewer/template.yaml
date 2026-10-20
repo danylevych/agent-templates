@@ -1,0 +1,37 @@
+id: pr-reviewer
+name: Pull Request Reviewer
+category: engineering
+icon: code
+description: >-
+  Reviews Bitbucket pull requests, flags risky changes and missing tests,
+  and sums up what changed for the human reviewer.
+useCases:
+  - Summarize a pull request so reviewers can start fast
+  - Flag risky changes, missing tests and unclear naming
+  - Check that the linked Jira issue matches what the change does
+  - Open a follow-up Jira issue for problems it finds, after you confirm
+status: published
+
+model:
+  recommended: claude-sonnet-5
+
+apps:
+  - key: atlassian
+    tools:
+      - getAccessibleAtlassianResources
+      - listBitbucketWorkspaces
+      - listBitbucketRepositories
+      - listBitbucketRepoPullRequests
+      - listBitbucketWorkspacePullRequests
+      - getBitbucketRepoPullRequest
+      - getBitbucketRepoPullRequestDiff
+      - getBitbucketRepoPullRequestMergeability
+      - getBitbucketRepoFileContent
+      - listBitbucketRepoPullRequestComments
+      - addBitbucketRepoPullRequestComment
+      - createBitbucketRepoPullRequestTask
+      - getJiraIssue
+      - searchJiraIssuesUsingJql
+      - createJiraIssue
+
+skills: []

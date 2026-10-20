@@ -1,0 +1,14 @@
+- id: engineering
+  label: Engineering
+- id: security
+  label: Security & IT
+- id: sales
+  label: Sales
+- id: support
+  label: Support
+- id: people
+  label: HR & People
+- id: ops
+  label: Operations
+- id: marketing
+  label: Marketing
