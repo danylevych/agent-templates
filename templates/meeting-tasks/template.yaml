@@ -11,23 +11,7 @@ useCases:
   - Create a Jira issue for each one, after you confirm
 status: published
 
-model:
-  recommended: claude-sonnet-5
-
-apps:
-  - key: google-calendar
-    tools:
-      - list_calendars
-      - list_events
-      - get_event
-  - key: google-docs
-    tools:
-      - list_documents
-      - get_document
-  - key: atlassian
-    tools:
-      - getAccessibleAtlassianResources
-      - listJiraIssueAssignableUsers
-      - createJiraIssue
-
-skills: []
+required_tools:
+  - mcp.google-calendar.read_only
+  - mcp.google-docs.read_only
+  - mcp.atlassian.read_write

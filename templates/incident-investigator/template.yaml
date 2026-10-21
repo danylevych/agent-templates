@@ -12,26 +12,7 @@ useCases:
   - Open a follow-up Jira issue, after you confirm
 status: published
 
-model:
-  recommended: claude-sonnet-5
-
-apps:
-  - key: datadog
-    tools:
-      - list_incidents
-      - get_incident
-      - get_monitors
-      - get_logs
-      - query_metrics
-      - list_traces
-      - get_all_services
-      - list_dashboards
-      - get_dashboard
-  - key: atlassian
-    tools:
-      - getAccessibleAtlassianResources
-      - searchJiraIssuesUsingJql
-      - createJiraIssue
-
-skills:
-  - doc
+required_tools:
+  - mcp.datadog.read_only
+  - mcp.atlassian.read_write
+  - skill.doc

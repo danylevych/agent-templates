@@ -12,24 +12,8 @@ useCases:
   - Build a monthly report as a spreadsheet or a short deck
 status: published
 
-model:
-  recommended: claude-sonnet-5
-
-apps:
-  - key: google-search-console
-    tools:
-      - gsc_list_properties
-      - gsc_get_performance_overview
-      - gsc_get_search_analytics
-      - gsc_compare_periods
-      - gsc_get_page_queries
-      - gsc_check_indexing_issues
-  - key: google-analytics
-    tools:
-      - ga_get_account_summaries
-      - ga_get_property_details
-      - ga_run_report
-
-skills:
-  - spreadsheet
-  - slides
+required_tools:
+  - mcp.google-search-console.read_only
+  - mcp.google-analytics.read_only
+  - skill.spreadsheet
+  - skill.slides

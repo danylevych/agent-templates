@@ -11,22 +11,7 @@ useCases:
   - Save it as a Google Doc and a Gmail draft for review
 status: published
 
-model:
-  recommended: claude-sonnet-5
-
-apps:
-  - key: google-docs
-    tools:
-      - list_documents
-      - get_document
-      - create_document
-      - insert_text
-      - format_text
-  - key: gmail
-    tools:
-      - get_current_email_address
-      - create_draft
-      - list_drafts
-
-skills:
-  - internal-comms
+required_tools:
+  - mcp.google-docs.read_write
+  - mcp.gmail.read_write
+  - skill.internal-comms

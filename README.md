@@ -1,8 +1,8 @@
 # Agent templates
 
 Ready-made agents a member can start from in Discover. Each template sets what the agent
-does, which apps and tools it may use, which skills it starts with, which model it
-recommends, and the instruction files copied into its workspace.
+does, which apps and tools it may use, which skills it starts with, and the instruction
+files copied into its workspace. The member picks the model.
 
 An admin adds this repository in **Template Sources** (URL, branch or tag, optional read-only
 token). obot syncs it and shows every published template to the members its access
@@ -20,6 +20,7 @@ templates/
     AGENTS.md                role, workflow and rules
     SOUL.md                  persona and tone
     IDENTITY.md              name, vibe, emoji
+    USER.md                  optional; what the agent knows about the people it works for
     icon.svg                 optional; overrides `icon`
 ```
 
@@ -39,15 +40,27 @@ useCases:
   - Summarize a pull request so reviewers can start fast
 status: published                # draft templates are visible to admins only
 
-model:
-  recommended: claude-sonnet-5   # the default for every template; the member can pick another model
-
-apps:
-  - key: atlassian               # the MCP catalog entry's entryKey
-    tools: [getBitbucketRepoPullRequest, getBitbucketRepoPullRequestDiff]
-
-skills: [doc]                    # names of skills obot already has
+required_tools:
+  - mcp.atlassian.read_write     # mcp.<entryKey>.<access>
+  - skill.doc                    # skill.<SKILL.md name> of a skill obot already has
 ```
+
+### required_tools
+
+Each entry is the resource, its name, and for an app the access level:
+
+| Entry | Gives the agent |
+|---|---|
+| `mcp.<entryKey>.read_only` | the app's tools that only read |
+| `mcp.<entryKey>.read_write` | those, and the tools that create or change something; never ones that delete |
+| `mcp.<entryKey>.full` | every tool of the app, including ones it adds later |
+| `skill.<name>` | the skill with that `SKILL.md` name |
+
+obot sorts an app's tools when it reads the template, the same way the admin and member
+screens group them: by what the server declares about a tool, else by the verb in its name
+(`get…`, `list…` read; `create…`, `update…` change; `delete…` deletes). A tool whose name
+says neither is left to `full`. If an app has no tool of the level asked for, obot lists it
+as unresolved rather than handing the agent every tool. An app is listed once, at one level.
 
 ### References are keys, not URLs
 
@@ -65,12 +78,11 @@ or uses the template:
 Because templates depend on them, entry keys and skill names are a contract: renaming one
 breaks every template that uses it.
 
-Tools are listed by name, and only the listed tools are given to the agent. A tool the
-member's policies do not allow is shown as blocked and can be requested.
+A tool the member's policies do not allow is shown as blocked and can be requested.
 
 ### Instruction files
 
-`AGENTS.md`, `SOUL.md` and `IDENTITY.md` are copied into the agent's workspace when it is
+`AGENTS.md`, `SOUL.md`, `IDENTITY.md` and `USER.md` (the last is optional) are copied into the agent's workspace when it is
 created. The member owns that copy: later changes to the template do not overwrite it.
 
 Do not add `TOOLS.md`. The agent host writes it from the tools the agent really has.
@@ -87,7 +99,7 @@ several templates need the same guidance as a skill, add it to a skill source fi
 ```bash
 pip install pyyaml
 python3 scripts/validate.py
-# also check app keys and tool names against an obot MCP catalog:
+# also check app keys against an obot MCP catalog:
 python3 scripts/validate.py --mcp-catalog ../obot/catalogs/mcp
 # and skill names against checked-out skill sources (repeat for each):
 python3 scripts/validate.py --skill-source ../skills

@@ -12,25 +12,8 @@ useCases:
   - Build a short pipeline deck for the sales meeting
 status: published
 
-model:
-  recommended: claude-sonnet-5
-
-apps:
-  - key: hubspot
-    tools:
-      - search_crm_objects
-      - get_crm_objects
-      - query_crm_data
-      - search_owners
-      - search_properties
-      - get_properties
-  - key: google-sheets
-    tools:
-      - create_spreadsheet
-      - read_spreadsheet
-      - append_row
-      - update_cells
-
-skills:
-  - spreadsheet
-  - slides
+required_tools:
+  - mcp.hubspot.read_only
+  - mcp.google-sheets.read_write
+  - skill.spreadsheet
+  - skill.slides

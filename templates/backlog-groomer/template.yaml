@@ -12,22 +12,6 @@ useCases:
   - Move groomed issues to Ready, after you confirm
 status: published
 
-model:
-  recommended: claude-sonnet-5
-
-apps:
-  - key: atlassian
-    tools:
-      - getAccessibleAtlassianResources
-      - searchJiraIssuesUsingJql
-      - getJiraIssue
-      - listJiraIssueComments
-      - editJiraIssue
-      - addOrEditJiraIssueComment
-      - listJiraIssueLinkTypes
-      - createJiraIssueLink
-      - listJiraIssueTransitions
-      - transitionJiraIssue
-
-skills:
-  - spreadsheet
+required_tools:
+  - mcp.atlassian.read_write
+  - skill.spreadsheet

@@ -27,42 +27,13 @@
       "maxItems": 8
     },
     "status": { "enum": ["draft", "published"] },
-    "model": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "recommended": {
-          "description": "Model name or alias as obot knows it. The member can pick another one.",
-          "type": "string"
-        }
-      }
-    },
-    "apps": {
-      "description": "MCP servers, by catalog entryKey, with the tools the agent may use.",
+    "required_tools": {
+      "description": "What the agent may use. mcp.<entryKey>.<access> grants an MCP catalog entry's tools by access level: read_only (tools that only read), read_write (those and tools that change something, never ones that delete) or full (every tool). skill.<name> picks a skill obot already has, by its SKILL.md name. No repository URLs; templates never ship skills.",
       "type": "array",
       "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["key", "tools"],
-        "properties": {
-          "key": {
-            "description": "The MCP catalog entry's entryKey. No repository URL.",
-            "type": "string",
-            "pattern": "^[a-z0-9]([a-z0-9.-]*[a-z0-9])?$"
-          },
-          "tools": {
-            "description": "Tool names. An empty list means none; list them explicitly.",
-            "type": "array",
-            "items": { "type": "string", "minLength": 1 },
-            "uniqueItems": true
-          }
-        }
-      }
-    },
-    "skills": {
-      "description": "Skills obot already has, by their SKILL.md name. No repository URL; templates never ship skills.",
-      "type": "array",
-      "items": { "type": "string", "pattern": "^[a-z0-9]([a-z0-9-]*[a-z0-9])?$" },
+        "type": "string",
+        "pattern": "^(mcp\\.[a-z0-9]([a-z0-9.-]*[a-z0-9])?\\.(read_only|read_write|full)|skill\\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)$"
+      },
       "uniqueItems": true
     }
   }

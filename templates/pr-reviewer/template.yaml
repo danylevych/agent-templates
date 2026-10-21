@@ -12,26 +12,5 @@ useCases:
   - Open a follow-up Jira issue for problems it finds, after you confirm
 status: published
 
-model:
-  recommended: claude-sonnet-5
-
-apps:
-  - key: atlassian
-    tools:
-      - getAccessibleAtlassianResources
-      - listBitbucketWorkspaces
-      - listBitbucketRepositories
-      - listBitbucketRepoPullRequests
-      - listBitbucketWorkspacePullRequests
-      - getBitbucketRepoPullRequest
-      - getBitbucketRepoPullRequestDiff
-      - getBitbucketRepoPullRequestMergeability
-      - getBitbucketRepoFileContent
-      - listBitbucketRepoPullRequestComments
-      - addBitbucketRepoPullRequestComment
-      - createBitbucketRepoPullRequestTask
-      - getJiraIssue
-      - searchJiraIssuesUsingJql
-      - createJiraIssue
-
-skills: []
+required_tools:
+  - mcp.atlassian.read_write

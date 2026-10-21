@@ -11,19 +11,6 @@ useCases:
   - Tell people where their existing ticket stands
 status: published
 
-model:
-  recommended: claude-sonnet-5
-
-apps:
-  - key: atlassian
-    tools:
-      - getAccessibleAtlassianResources
-      - searchConfluence
-      - getConfluenceContent
-      - searchJiraIssuesUsingJql
-      - getJiraIssue
-      - createJiraIssue
-      - addOrEditJiraIssueComment
-
-skills:
-  - internal-comms
+required_tools:
+  - mcp.atlassian.read_write
+  - skill.internal-comms

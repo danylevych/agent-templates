@@ -5,10 +5,11 @@ Checks what a schema cannot: the id matches the directory, the category exists, 
 instruction files are present. A template only picks skills obot already has, so it must
 not ship a skills/ directory of its own.
 
-With --mcp-catalog DIR it also checks each app key and tool name against an obot MCP
-catalog directory (one *.yml per server, with entryKey and toolPreview), for example
-the obot repository's catalogs/mcp. With --skill-source DIR (repeatable) it checks each
-skill name against the SKILL.md files of a checked-out skill source.
+With --mcp-catalog DIR it also checks each mcp.<entryKey> against an obot MCP catalog
+directory (one *.yml per server, with entryKey), for example the obot repository's
+catalogs/mcp. With --skill-source DIR (repeatable) it checks each skill.<name> against the
+SKILL.md files of a checked-out skill source. Which tools an access level grants is decided
+by obot when it reads the template, from the server's tool list.
 """
 
 from __future__ import annotations
@@ -28,16 +29,18 @@ REQUIRED_FILES = ("AGENTS.md", "SOUL.md", "IDENTITY.md")
 FORBIDDEN_FILES = ("TOOLS.md", "skills")
 ID_PATTERN = re.compile(r"^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$")
 ALLOWED_KEYS = set(json.loads((ROOT / "schema" / "template.schema.json").read_text())["properties"])
+ACCESS_LEVELS = ("read_only", "read_write", "full")
+MCP_KEY_PATTERN = re.compile(r"^[a-z0-9]([a-z0-9.-]*[a-z0-9])?$")
+SKILL_PATTERN = re.compile(r"^[a-z0-9]([a-z0-9-]*[a-z0-9])?$")
 
 
-def load_mcp_catalog(directory: Path) -> dict[str, set[str]]:
-    catalog: dict[str, set[str]] = {}
+def load_mcp_catalog(directory: Path) -> set[str]:
+    keys: set[str] = set()
     for path in sorted(directory.glob("*.yml")) + sorted(directory.glob("*.yaml")):
         entry = yaml.safe_load(path.read_text()) or {}
-        key = entry.get("entryKey")
-        if key:
-            catalog[key] = {tool["name"] for tool in entry.get("toolPreview") or [] if "name" in tool}
-    return catalog
+        if entry.get("entryKey"):
+            keys.add(entry["entryKey"])
+    return keys
 
 
 def load_skill_names(directories: list[Path]) -> set[str]:
@@ -52,7 +55,7 @@ def load_skill_names(directories: list[Path]) -> set[str]:
     return names
 
 
-def validate(template_dir: Path, categories: set[str], mcp: dict[str, set[str]] | None,
+def validate(template_dir: Path, categories: set[str], mcp: set[str] | None,
              skills: set[str] | None) -> list[str]:
     errors: list[str] = []
     manifest = yaml.safe_load((template_dir / "template.yaml").read_text()) or {}
@@ -81,42 +84,39 @@ def validate(template_dir: Path, categories: set[str], mcp: dict[str, set[str]] 
         if (template_dir / name).exists():
             errors.append(f"{name} must not be shipped in a template")
 
-    listed = manifest.get("skills") or []
-    if len(listed) != len(set(listed)):
-        errors.append("a skill is listed twice")
-    if skills is not None:
-        for skill in listed:
-            if skill not in skills:
-                errors.append(f"skill {skill!r} is in none of the given skill sources")
-
-    seen_apps: set[str] = set()
-    for app in manifest.get("apps") or []:
-        key = app.get("key")
-        tools = app.get("tools")
-        if not key:
-            errors.append("an app has no key")
-            continue
-        if key in seen_apps:
-            errors.append(f"app {key!r} is listed twice")
-        seen_apps.add(key)
-        if not isinstance(tools, list):
-            errors.append(f"app {key!r}: tools must be a list")
-            continue
-        if len(tools) != len(set(tools)):
-            errors.append(f"app {key!r}: a tool is listed twice")
-        if mcp is not None:
-            if key not in mcp:
-                errors.append(f"app {key!r}: no MCP catalog entry has this entryKey")
-            else:
-                missing = sorted(set(tools) - mcp[key])
-                if missing:
-                    errors.append(f"app {key!r}: unknown tools {', '.join(missing)}")
+    required = manifest.get("required_tools") or []
+    if not isinstance(required, list):
+        return errors + ["required_tools must be a list"]
+    seen: dict[str, str] = {}
+    for value in required:
+        resource, _, rest = str(value).partition(".")
+        if resource == "mcp":
+            key, _, access = rest.rpartition(".")
+            if not MCP_KEY_PATTERN.match(key) or access not in ACCESS_LEVELS:
+                errors.append(f"{value!r} must be mcp.<entryKey>.<{'|'.join(ACCESS_LEVELS)}>")
+                continue
+            if f"mcp.{key}" in seen:
+                errors.append(f"{value!r}: app {key!r} is already required as {seen[f'mcp.{key}']!r}")
+            seen[f"mcp.{key}"] = value
+            if mcp is not None and key not in mcp:
+                errors.append(f"{value!r}: no MCP catalog entry has entryKey {key!r}")
+        elif resource == "skill":
+            if not SKILL_PATTERN.match(rest):
+                errors.append(f"{value!r} must be skill.<name>")
+                continue
+            if f"skill.{rest}" in seen:
+                errors.append(f"{value!r} is listed twice")
+            seen[f"skill.{rest}"] = value
+            if skills is not None and rest not in skills:
+                errors.append(f"{value!r}: skill {rest!r} is in none of the given skill sources")
+        else:
+            errors.append(f"{value!r} must start with mcp. or skill.")
     return errors
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--mcp-catalog", type=Path, help="obot MCP catalog directory to check app keys and tools against")
+    parser.add_argument("--mcp-catalog", type=Path, help="obot MCP catalog directory to check app keys against")
     parser.add_argument("--skill-source", type=Path, action="append", default=[],
                         help="checked-out skill source to check skill names against; repeatable")
     args = parser.parse_args()
