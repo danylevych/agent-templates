@@ -1,0 +1,5 @@
+id: broken-own-skill
+name: broken-own-skill
+category: engineering
+description: Broken on purpose to see how obot handles it.
+status: published

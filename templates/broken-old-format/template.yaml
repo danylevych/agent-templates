@@ -1,0 +1,11 @@
+id: broken-old-format
+name: Broken Old Format
+category: engineering
+description: Broken on purpose to see how obot handles it.
+status: published
+apps:
+  - key: atlassian
+    tools: [getJiraIssue]
+skills: [doc]
+model:
+  recommended: claude-sonnet-5

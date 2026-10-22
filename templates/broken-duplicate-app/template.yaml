@@ -1,0 +1,8 @@
+id: broken-duplicate-app
+name: Broken Duplicate App
+category: engineering
+description: Broken on purpose to see how obot handles it.
+status: published
+required_tools:
+  - mcp.atlassian.read_only
+  - mcp.atlassian.full

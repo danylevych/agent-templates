@@ -58,7 +58,12 @@ def load_skill_names(directories: list[Path]) -> set[str]:
 def validate(template_dir: Path, categories: set[str], mcp: set[str] | None,
              skills: set[str] | None) -> list[str]:
     errors: list[str] = []
-    manifest = yaml.safe_load((template_dir / "template.yaml").read_text()) or {}
+    try:
+        manifest = yaml.safe_load((template_dir / "template.yaml").read_text()) or {}
+    except yaml.YAMLError as error:
+        return [f"template.yaml is not valid YAML: {str(error).splitlines()[0]}"]
+    if not isinstance(manifest, dict):
+        return ["template.yaml must be a mapping"]
 
     unknown = set(manifest) - ALLOWED_KEYS
     if unknown:

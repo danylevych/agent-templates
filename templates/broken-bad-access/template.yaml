@@ -1,0 +1,7 @@
+id: broken-bad-access
+name: Broken Bad Access
+category: engineering
+description: Broken on purpose to see how obot handles it.
+status: published
+required_tools:
+  - mcp.atlassian.admin

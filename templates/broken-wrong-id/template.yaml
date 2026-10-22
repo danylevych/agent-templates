@@ -1,0 +1,7 @@
+id: something-else
+name: Broken Wrong Id
+category: engineering
+description: Broken on purpose to see how obot handles it.
+status: published
+required_tools:
+  - skill.doc
